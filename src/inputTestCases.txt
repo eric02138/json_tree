@@ -1,0 +1,10 @@
+{id,operator,collectedWhen{id,dateTag,collectedWhen{id}, uploadedWhen},data}
+{id,operator,data{id,collectedWhen{mid{test1, test2},OK},collectedWhen{id},dateTag},time{uploadedWhen,collectedWhen}}
+{id{test1,test2},time{uploadedWhen,collectedWhen}}
+{id{test1,test2},time}
+{}
+{,}
+
+{}
+{id{test1,test2},time{uploadedWhen,collectedWhen}
+{id{test1,test2}time{uploadedWhen,collectedWhen}}
