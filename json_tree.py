@@ -57,8 +57,72 @@ class JsonTree:
         """
         return True
 
+    def build_object(self, string):
+        """
+        Build an object which contains the words and their depth levels
+        Loop through the string by character.  If { is found, increase depth.  If } is found, decrease depth.
+        Use , { } as word separators.
+        :param string:
+        :return:
+        """
+        word_obj = []    #Ordinarily would use an OrderedDict here, but again, no outside packages.
+        current_word = ""
+        current_depth = -1
+        for i, char in enumerate(string):
+            if char not in ["{", "}", ","]:
+                current_word += char
+            else:
+                if current_word:     #Don't add in case the previous character was "{", "}" or ","
+                    word_obj.append({'word': current_word, 'depth': current_depth})
+                    current_word = ""
+                if char == "{":
+                    if i > 0 and string[i - 1] in ["{", "}", ","]:
+                        """
+                        Special case: "}{" means badly formed JSON.  Raise a Value Error.
+                        """
+                        raise ValueError("Invalid JSON.  JSON objects must be preceded by a word.")
+                    current_depth += 1
+                if char == "}":
+                    if i < len(string) - 1 and string[i + 1] not in ["}", ","]:
+                        """
+                        Special case: A } must be followed by either a { or a ,
+                        """
+                        raise ValueError("Invalid JSON.  A } must be followed by either another } or a , .")
+                    current_depth -= 1
+        return word_obj
+
+    def display_tree(self, word_list, alpha=None):
+        """
+        Loop through the word_obj and display each line preceded by the number of dashes
+        :param self:
+        :param word_list:
+        :param alpha: boolean to sort by alphabetical order
+        :return:
+        """
+        lines = []
+        if alpha:
+            word_list = sorted(word_list, key=lambda k: k['word'])
+        for word_obj in word_list:
+            line = "{0}{1}".format("-" * word_obj.get('depth'), word_obj.get('word'))
+            lines.append(line)    #mainly here for testing
+            print(line)
+        return lines
+
+
 if __name__ == "__main__":
+    """
+    Ask user for input to avoid using sys.argv for command line args
+    """
+    alpha = None
+    alpha_answer = input('Do you want to display results by alphabetical order? [Y/n]: ')
+    if "y" in alpha_answer.lower()[:1]:
+        alpha = True
     json_tree = JsonTree()
     json_tree.read_strings()
     for string in json_tree.strings:
-        print(string)
+        word_list = json_tree.build_object(string)
+        json_tree.display_tree(word_list, alpha=alpha)
+    #word_list = json_tree.build_object(json_tree.strings[3])
+    #json_tree.display_tree(word_list)
+    #for string in json_tree.strings:
+    #    build_object(string)
