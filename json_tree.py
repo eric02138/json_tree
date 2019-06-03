@@ -119,10 +119,10 @@ if __name__ == "__main__":
         alpha = True
     json_tree = JsonTree()
     json_tree.read_strings()
-    for string in json_tree.strings:
+    print()
+    for i, string in enumerate(json_tree.strings, start=1):
         word_list = json_tree.build_object(string)
         json_tree.display_tree(word_list, alpha=alpha)
+        print()
     #word_list = json_tree.build_object(json_tree.strings[3])
     #json_tree.display_tree(word_list)
-    #for string in json_tree.strings:
-    #    build_object(string)
